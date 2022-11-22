@@ -108,6 +108,7 @@ Token *tokenize(char *p)
         if (*p == '+' || *p == '-')
         {
             cur = new_token(TK_RESERVED, cur, p++);
+            continue;
         }
 
         if (isdigit(*p))
@@ -117,7 +118,7 @@ Token *tokenize(char *p)
             continue;
         }
 
-        error("トークナイズできません'%c'", p);
+        error("トークナイズできません'%c'", *p);
     }
 
     new_token(TK_EOF, cur, p);
@@ -137,25 +138,25 @@ int main(int argc, char **argv)
 
     // アセンブリ前半部分を出力
     printf(".intel_syntax noprefix\n");
-    printf(".globl main\n");
+    printf(".global main\n");
     printf("main:\n");
 
     // 式の最初は数値でなければならないのでそれをチェックして
     // 最初のmovを実行する
-    printf("    mov rax, %d\n", expect_number());
+    printf("  mov rax, %d\n", expect_number());
 
     while (!at_eof())
     {
         if (consume('+'))
         {
-            printf("    add rax, %d\n", expect_number());
+            printf("  add rax, %d\n", expect_number());
             continue;
         }
 
         expect('-');
-        printf("    sub rax, %d\n", expect_number());
+        printf("  sub rax, %d\n", expect_number());
     }
 
-    printf("    ret\n");
+    printf("  ret\n");
     return 0;
 }
