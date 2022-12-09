@@ -162,11 +162,11 @@ Node *equality()
     {
         if (consume("=="))
         {
-            node = new_node(ND_ADD, node, relational());
+            node = new_node(ND_EQ, node, relational());
         }
         else if (consume("!="))
         {
-            node = new_node(ND_SUB, node, relational());
+            node = new_node(ND_NE, node, relational());
         }
         else
         {
@@ -207,34 +207,41 @@ Node *relational()
 Node *add()
 {
     Node *node = mul();
-    if (consume("+"))
+    for (;;)
     {
-        node = new_node(ND_ADD, node, mul());
-    }
-    else if (consume("-"))
-    {
-        node = new_node(ND_SUB, node, mul());
-    }
-    else
-    {
-        return node;
+        if (consume("+"))
+        {
+            node = new_node(ND_ADD, node, mul());
+        }
+        else if (consume("-"))
+        {
+            node = new_node(ND_SUB, node, mul());
+        }
+        else
+        {
+            return node;
+        }
     }
 }
 
 Node *mul()
 {
     Node *node = unary();
-    if (consume("*"))
+
+    for (;;)
     {
-        node = new_node(ND_DIV, node, unary());
-    }
-    else if (consume("/"))
-    {
-        node = new_node(ND_DIV, node, unary());
-    }
-    else
-    {
-        return node;
+        if (consume("*"))
+        {
+            node = new_node(ND_MUL, node, unary());
+        }
+        else if (consume("/"))
+        {
+            node = new_node(ND_DIV, node, unary());
+        }
+        else
+        {
+            return node;
+        }
     }
 }
 
@@ -371,7 +378,6 @@ Token *tokenize()
             cur->len = p - q;
             continue;
         }
-
         error_at(p, "トークナイズできません");
     }
 
