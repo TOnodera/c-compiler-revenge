@@ -18,9 +18,31 @@ Node *new_node_num(int val)
     return node;
 }
 
+Node *program()
+{
+    return stmt();
+}
+
+Node *stmt()
+{
+    Node *node = expr();
+    expect(";");
+    return node;
+}
+
 Node *expr()
 {
-    return equality();
+    return assign();
+}
+
+Node *assign()
+{
+    Node *node = equality();
+    if (consume("="))
+    {
+        node = new_node(ND_ASSIGN, node, assign());
+    }
+    return node;
 }
 
 Node *equality()
