@@ -13,6 +13,16 @@ bool consume(char *op)
     return true;
 }
 
+Token *consume_ident()
+{
+    if (token->kind == TK_INDENT)
+    {
+        token = token->next;
+        return token;
+    }
+    return NULL;
+}
+
 // 次のトークンが期待している記号の時は、トークンを読み進める。
 // それ以外の場合にはエラーを報告する。
 void expect(char *op)
@@ -77,7 +87,7 @@ Token *tokenize()
             continue;
         }
 
-        if (strchr("+-*/()<>", *p))
+        if (strchr("+-*/()<>;=", *p))
         {
             cur = new_token(TK_RESERVED, cur, p++, 1);
             continue;
@@ -85,8 +95,7 @@ Token *tokenize()
 
         if ('a' <= *p && *p <= 'z')
         {
-            cur = new_token(TK_INDENT, cur, p++);
-            cur->len = 1;
+            cur = new_token(TK_INDENT, cur, p++, 1);
             continue;
         }
 

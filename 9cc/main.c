@@ -3,6 +3,7 @@
 // 定義(宣言はヘッダーファイルにある)
 char *user_input;
 Token *token;
+Node *code[100];
 
 int main(int argc, char **argv)
 {
@@ -14,17 +15,27 @@ int main(int argc, char **argv)
 
     // トークナイズする
     user_input = argv[1];
-    token = tokenize();
-    Node *node = expr();
 
+    token = tokenize();
+    program();
     // アセンブリ前半部分を出力
     printf(".intel_syntax noprefix\n");
     printf(".global main\n");
     printf("main:\n");
 
-    gen(node);
+    // 変数26個分の領域を確保する
+    printf("  push rbp\n");
+    printf("  mov rbp, rsp\n");
+    printf("  sub rsp, 208\n");
 
-    printf("  pop rax\n");
+    for (int i = 0; code[i]; i++)
+    {
+        gen(code[i]);
+        printf("  pop rax\n");
+    }
+
+    printf("  mov rsp,rbp\n");
+    printf("  pop rbp\n");
     printf("  ret\n");
     return 0;
 }

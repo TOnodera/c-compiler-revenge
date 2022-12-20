@@ -8,7 +8,9 @@
 	"dockerFile": "../Dockerfile",
 	"extensions": [
 		"ms-vscode.cpptools-extension-pack",
-		"mhutchie.git-graph"
+		"mhutchie.git-graph",
+		"ms-vscode.makefile-tools",
+		"spmeesseman.vscode-taskexplorer"
 	]
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
