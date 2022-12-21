@@ -15,10 +15,11 @@ bool consume(char *op)
 
 Token *consume_ident()
 {
-    if (token->kind == TK_INDENT)
+    if (token->kind == TK_IDENT)
     {
+        Token *ident = token;
         token = token->next;
-        return token;
+        return ident;
     }
     return NULL;
 }
@@ -95,7 +96,7 @@ Token *tokenize()
 
         if ('a' <= *p && *p <= 'z')
         {
-            cur = new_token(TK_INDENT, cur, p++, 1);
+            cur = new_token(TK_IDENT, cur, p++, 1);
             continue;
         }
 

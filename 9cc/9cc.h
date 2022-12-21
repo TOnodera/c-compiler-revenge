@@ -37,7 +37,7 @@ struct Node
 typedef enum
 {
     TK_RESERVED, // 記号
-    TK_INDENT,   // 識別子
+    TK_IDENT,    // 識別子
     TK_NUM,      // 整数トークン
     TK_EOF,      // 入力の終わりを表すトークン
 } TokenKind;
