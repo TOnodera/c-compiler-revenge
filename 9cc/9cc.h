@@ -54,6 +54,18 @@ struct Token
     int len;        // トークンの長さ
 };
 
+typedef struct LVar LVar;
+
+struct LVar
+{
+    LVar *next;
+    char *name;
+    int len;
+    int offset; // RBPからのoffset
+};
+
+extern LVar *locals;
+
 // 宣言
 // 入力されるプログラムを保持する
 extern char *user_input;
@@ -61,7 +73,6 @@ extern char *user_input;
 extern Token *token;
 
 extern Node *code[100];
-
 void error(char *fmt, ...);
 // ユーザー入力(user_input)のどこでエラーがあったかを指摘する
 void error_at(char *loc, char *fmt, ...);
@@ -90,6 +101,7 @@ Node *unary();
 Node *primary();
 void gen(Node *node);
 void gen_lval(Node *node);
+LVar *find_lvar(Token *tok);
 // 新しいトークンを作成してcurに繋げる
 Token *new_token(TokenKind kind, Token *cur, char *str, int len);
 bool startswith(char *p, char *q);
