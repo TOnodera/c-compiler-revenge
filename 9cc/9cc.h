@@ -19,6 +19,7 @@ typedef enum
     ND_ASSIGN, // =
     ND_LVAR,   // ローカル変数
     ND_NUM,    // NUM
+    ND_RETURN, // returnを表すノード
 } NodeKind;
 
 typedef struct Node Node;
@@ -40,6 +41,7 @@ typedef enum
     TK_IDENT,    // 識別子
     TK_NUM,      // 整数トークン
     TK_EOF,      // 入力の終わりを表すトークン
+    TK_RETURN,   // returnを表すトークン
 } TokenKind;
 
 typedef struct Token Token;
@@ -107,3 +109,5 @@ Token *new_token(TokenKind kind, Token *cur, char *str, int len);
 bool startswith(char *p, char *q);
 // 入力文字列pをトークナイズしてそれを返す
 Token *tokenize();
+// 入力文字列がアルファベット、数値、アンダーバーかどうか判定する
+int is_alnum(char c);
