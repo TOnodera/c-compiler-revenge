@@ -116,4 +116,5 @@ bool startswith(char *p, char *q);
 // 入力文字列pをトークナイズしてそれを返す
 Token *tokenize();
 // 入力文字列がアルファベット、数値、アンダーバーかどうか判定する
-int is_alnum(char c);
+bool is_alnum(char c);
+bool is_alpha(char c);
