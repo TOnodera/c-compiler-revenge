@@ -20,6 +20,7 @@ typedef enum
     ND_LVAR,   // ローカル変数
     ND_NUM,    // NUM
     ND_RETURN, // returnを表すノード
+    ND_IF,     // if
 } NodeKind;
 
 typedef struct Node Node;
@@ -30,6 +31,11 @@ struct Node
     NodeKind kind;
     Node *lhs;
     Node *rhs;
+    // if statement
+    Node *cond;
+    Node *then;
+    Node *els;
+
     int val;
     int offset;
 };

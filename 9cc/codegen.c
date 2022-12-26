@@ -1,6 +1,7 @@
 #include "9cc.h"
 
 LVar *locals = NULL;
+int label_seq = 1;
 
 Node *
 new_node(NodeKind kind, Node *lhs, Node *rhs)
@@ -38,17 +39,26 @@ Node *stmt()
         node = calloc(1, sizeof(Node));
         node->kind = ND_RETURN;
         node->lhs = expr();
-    }
-    else
-    {
-        node = expr();
+        expect(";");
+        return node;
     }
 
-    if (!consume(";"))
+    if (consume("if"))
     {
-        // TODO error_atで書き換えれるようにしたい
-        error("';'ではないトークンです");
+        Node *node = new_node(ND_IF, NULL, NULL);
+        expect("(");
+        node->cond = expr();
+        expect(")");
+        node->then = stmt();
+        if (consume("else"))
+        {
+            node->els = stmt();
+        }
+        return node;
     }
+
+    node = expr();
+    expect(";");
     return node;
 }
 
@@ -247,6 +257,30 @@ void gen(Node *node)
         printf("  mov rsp, rbp\n");
         printf("  pop rbp\n");
         printf("  ret\n");
+        return;
+    case ND_IF:
+        int seq = label_seq++;
+        if (node->els)
+        {
+            gen(node->cond);
+            printf("  pop rax\n");
+            printf("  cmp rax, 0\n");
+            printf("  je, .L.else.%d", seq);
+            gen(node->then);
+            printf("  jmp .L.end.%d", seq);
+            printf(".L.else.%d\n", seq);
+            gen(node->els);
+            printf(".L.end.%d:\n", seq);
+        }
+        else
+        {
+            gen(node->cond);
+            printf("  pop rax\n");
+            printf("  cmp rax, 0\n");
+            printf("  je  .L.end.%d\n", seq);
+            gen(node->then);
+            printf(".L.end.%d:\n", seq);
+        }
         return;
     }
 

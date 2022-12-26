@@ -49,4 +49,11 @@ assert 14 'a = 3;b = 5 * 6 - 8;a + b / 2;'
 assert 202 'a=10;b=20;c=b/a; c + (19+1)*10;'
 assert 14 'a = 3;b = 5 * 6 - 8;return a + b / 2;'
 
+assert 14 'foo = 3;bar = 5 * 6 - 8;return foo + bar / 2;'
+
+assert 3 'if (0) return 2; return 3;'
+assert 3 'if (1-1) return 2; return 3;'
+assert 2 'if (1) return 2; return 3;'
+assert 2 'if (2-1) return 2; return 3;'
+
 echo OK
