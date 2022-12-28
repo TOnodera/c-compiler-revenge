@@ -1,7 +1,7 @@
 #include "9cc.h"
 
 LVar *locals = NULL;
-int label_seq = 1;
+static int label_seq = 1;
 
 Node *
 new_node(NodeKind kind, Node *lhs, Node *rhs)
@@ -54,6 +54,16 @@ Node *stmt()
         {
             node->els = stmt();
         }
+        return node;
+    }
+
+    if (consume("while"))
+    {
+        Node *node = new_node(ND_WHILE, NULL, NULL);
+        expect("(");
+        node->cond = expr();
+        expect(")");
+        node->then = stmt();
         return node;
     }
 
@@ -231,6 +241,7 @@ LVar *find_lvar(Token *tok)
 
 void gen(Node *node)
 {
+    int seq = label_seq++;
     switch (node->kind)
     {
     case ND_NUM:
@@ -259,7 +270,6 @@ void gen(Node *node)
         printf("  ret\n");
         return;
     case ND_IF:
-        int seq = label_seq++;
         if (node->els)
         {
             gen(node->cond);
@@ -281,6 +291,16 @@ void gen(Node *node)
             gen(node->then);
             printf(".L.end.%d:\n", seq);
         }
+        return;
+    case ND_WHILE:
+        printf(".L.begin.%d:\n", seq);
+        gen(node->cond);
+        printf("  pop rax\n");
+        printf("  cmp rax, 0\n");
+        printf("  je .L.end.%d:\n", seq);
+        gen(node->then);
+        printf("  jmp .L.begin.%d\n", seq);
+        printf(".L.end.%d:\n", seq);
         return;
     }
 

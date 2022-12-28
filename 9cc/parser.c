@@ -101,10 +101,10 @@ Token *tokenize()
             continue;
         }
 
-        if (!strncmp(p, "if", 2))
+        if (!strncmp(p, "while", 5))
         {
-            cur = new_token(TK_RESERVED, cur, p, 2);
-            p += 2;
+            cur = new_token(TK_RESERVED, cur, p, 5);
+            p += 5;
             continue;
         }
 
@@ -112,6 +112,13 @@ Token *tokenize()
         {
             cur = new_token(TK_RESERVED, cur, p, 4);
             p += 4;
+            continue;
+        }
+
+        if (!strncmp(p, "if", 2))
+        {
+            cur = new_token(TK_RESERVED, cur, p, 2);
+            p += 2;
             continue;
         }
 

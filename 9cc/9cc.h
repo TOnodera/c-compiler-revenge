@@ -21,6 +21,7 @@ typedef enum
     ND_NUM,    // NUM
     ND_RETURN, // returnを表すノード
     ND_IF,     // if
+    ND_WHILE,  // while
 } NodeKind;
 
 typedef struct Node Node;
