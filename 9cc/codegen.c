@@ -67,6 +67,30 @@ Node *stmt()
         return node;
     }
 
+    if (consume("for"))
+    {
+        // "for" "(" expr? ";" expr? ";" expr? ")" stmt
+        Node *node = new_node(ND_FOR, NULL, NULL);
+        expect("(");
+        if (!consume(";"))
+        {
+            node->init = new_node(ND_FOR, expr(), NULL);
+            expect(";");
+        }
+        if (!consume(";"))
+        {
+            node->cond = expr();
+            expect(";");
+        }
+        if (!consume(")"))
+        {
+            node->inc = new_node(ND_FOR, expr(), NULL);
+            expect(")");
+        }
+        node->then = stmt();
+        return node;
+    }
+
     node = expr();
     expect(";");
     return node;
@@ -299,6 +323,27 @@ void gen(Node *node)
         printf("  cmp rax, 0\n");
         printf("  je  .L.end.%d\n", seq);
         gen(node->then);
+        printf("  jmp .L.begin.%d\n", seq);
+        printf(".L.end.%d:\n", seq);
+        return;
+    case ND_FOR:
+        if (node->init)
+        {
+            gen(node->init);
+        }
+        printf(".L.begin.%d:\n", seq);
+        if (node->cond)
+        {
+            gen(node->cond);
+            printf("  pop rax\n");
+            printf("  cmp rax, 0\n");
+            printf("  je  .L.end.%d\n", seq);
+        }
+        gen(node->then);
+        if (node->inc)
+        {
+            gen(node->inc);
+        }
         printf("  jmp .L.begin.%d\n", seq);
         printf(".L.end.%d:\n", seq);
         return;

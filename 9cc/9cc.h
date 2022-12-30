@@ -22,6 +22,7 @@ typedef enum
     ND_RETURN, // returnを表すノード
     ND_IF,     // if
     ND_WHILE,  // while
+    ND_FOR,    // for
 } NodeKind;
 
 typedef struct Node Node;
@@ -32,10 +33,13 @@ struct Node
     NodeKind kind;
     Node *lhs;
     Node *rhs;
-    // if statement
+
+    // "if" "while" "for" statement
     Node *cond;
     Node *then;
     Node *els;
+    Node *init;
+    Node *inc;
 
     int val;
     int offset;

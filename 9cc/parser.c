@@ -115,6 +115,13 @@ Token *tokenize()
             continue;
         }
 
+        if (!strncmp(p, "for", 3))
+        {
+            cur = new_token(TK_RESERVED, cur, p, 3);
+            p += 3;
+            continue;
+        }
+
         if (!strncmp(p, "if", 2))
         {
             cur = new_token(TK_RESERVED, cur, p, 2);
