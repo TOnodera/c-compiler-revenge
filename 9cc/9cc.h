@@ -23,6 +23,7 @@ typedef enum
     ND_IF,     // if
     ND_WHILE,  // while
     ND_FOR,    // for
+    ND_BLOCK,  // Block
 } NodeKind;
 
 typedef struct Node Node;
@@ -33,6 +34,8 @@ struct Node
     NodeKind kind;
     Node *lhs;
     Node *rhs;
+    Node *body;
+    Node *next;
 
     // "if" "while" "for" statement
     Node *cond;
