@@ -8,22 +8,23 @@
 // 抽象構文木のノードの種類
 typedef enum
 {
-    ND_ADD,    // +
-    ND_SUB,    // -
-    ND_MUL,    // *
-    ND_DIV,    // /
-    ND_EQ,     // ==
-    ND_NE,     // !=
-    ND_LT,     // <
-    ND_LE,     // <=
-    ND_ASSIGN, // =
-    ND_LVAR,   // ローカル変数
-    ND_NUM,    // NUM
-    ND_RETURN, // returnを表すノード
-    ND_IF,     // if
-    ND_WHILE,  // while
-    ND_FOR,    // for
-    ND_BLOCK,  // Block
+    ND_ADD,     // +
+    ND_SUB,     // -
+    ND_MUL,     // *
+    ND_DIV,     // /
+    ND_EQ,      // ==
+    ND_NE,      // !=
+    ND_LT,      // <
+    ND_LE,      // <=
+    ND_ASSIGN,  // =
+    ND_LVAR,    // ローカル変数
+    ND_NUM,     // NUM
+    ND_RETURN,  // returnを表すノード
+    ND_IF,      // if
+    ND_WHILE,   // while
+    ND_FOR,     // for
+    ND_BLOCK,   // Block
+    ND_FUNCALL, // 関数呼び出し
 } NodeKind;
 
 typedef struct Node Node;
@@ -34,7 +35,6 @@ struct Node
     NodeKind kind;
     Node *lhs;
     Node *rhs;
-    Node *body;
     Node *next;
 
     // "if" "while" "for" statement
@@ -43,6 +43,12 @@ struct Node
     Node *els;
     Node *init;
     Node *inc;
+
+    // ブロック呼び出し
+    Node *body;
+
+    // 関数名
+    char *funcname;
 
     int val;
     int offset;

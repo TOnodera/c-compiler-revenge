@@ -230,6 +230,8 @@ Node *unary()
     return primary();
 }
 
+// primary = "(" expr ")" | ident args? | num
+// args = "(" ")"
 Node *primary()
 {
     if (consume("("))
@@ -242,9 +244,18 @@ Node *primary()
     Token *tok = consume_ident();
     if (tok)
     {
+        // 関数呼び出し
+        if (consume("("))
+        {
+            expect(")");
+            Node *node = new_node(ND_FUNCALL, NULL, NULL);
+            node->funcname = strndup(tok->str, tok->len);
+            return node;
+        }
+
+        // 変数
         Node *node = calloc(1, sizeof(Node));
         node->kind = ND_LVAR;
-
         LVar *lvar = find_lvar(tok);
         if (lvar)
         {
@@ -368,6 +379,10 @@ void gen(Node *node)
         {
             gen(n);
         }
+        return;
+    case ND_FUNCALL:
+        printf("  call %s\n", node->funcname);
+        printf("  push rax\n");
         return;
     }
 
